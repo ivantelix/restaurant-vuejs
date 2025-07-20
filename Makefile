@@ -1,4 +1,4 @@
-.PHONY: migrations superuser
+.PHONY: migrations superuser api client
 
 # Obtener todas las apps dinámicamente del directorio apps
 APPS := $(shell find backend/apps -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
@@ -36,4 +36,28 @@ superuser-auto:
 		echo "Error: Necesitas definir DJANGO_SUPERUSER_USERNAME, DJANGO_SUPERUSER_EMAIL y DJANGO_SUPERUSER_PASSWORD"; \
 		exit 1; \
 	fi
-	python backend/manage.py createsuperuser --noinput 
+	python backend/manage.py createsuperuser --noinput
+
+# Comando para levantar el servidor de la API (Django)
+api:
+	@echo "Iniciando servidor de la API..."
+	cd backend && python manage.py runserver
+
+# Comando para levantar el servidor del cliente (Vue.js)
+client:
+	@echo "Iniciando servidor del cliente..."
+	cd frontend && npm run serve
+
+# Comando para instalar dependencias del backend
+install-backend:
+	@echo "Instalando dependencias del backend..."
+	pip install -r requirements.txt
+
+# Comando para instalar dependencias del frontend
+install-frontend:
+	@echo "Instalando dependencias del frontend..."
+	cd frontend && npm install
+
+# Comando para instalar todas las dependencias
+install: install-backend install-frontend
+	@echo "Todas las dependencias han sido instaladas" 
